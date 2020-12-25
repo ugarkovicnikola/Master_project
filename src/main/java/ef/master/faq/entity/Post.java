@@ -1,4 +1,4 @@
-package ef.master.entity;
+package ef.master.faq.entity;
 
 import lombok.AccessLevel;
 import lombok.Data;

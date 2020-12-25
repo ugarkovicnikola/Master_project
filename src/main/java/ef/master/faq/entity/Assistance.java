@@ -1,4 +1,4 @@
-package ef.master.entity;
+package ef.master.faq.entity;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -15,18 +15,17 @@ import java.util.List;
 
 @Entity
 @Data
-public class Professor{
+public class Assistance {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String firstName;
-  private String lastName;
+  private String nameOfService;
   private String email;
   private String password;
 
-  @OneToMany(mappedBy = "professor")
+  @OneToMany(mappedBy = "assistance")
   private List<Comment> comments;
 
   @CreationTimestamp

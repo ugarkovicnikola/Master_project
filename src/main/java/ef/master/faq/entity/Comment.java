@@ -1,4 +1,4 @@
-package ef.master.entity;
+package ef.master.faq.entity;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -32,8 +32,8 @@ public class Comment {
   private Professor professor;
 
   @ManyToOne
-  @JoinColumn(name = "studentServices_id")
-  private StudentServices studentServices;
+  @JoinColumn(name = "services_id")
+  private Assistance assistance;
 
   @ManyToOne
   @JoinColumn(name = "post_id")
