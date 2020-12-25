@@ -1,0 +1,52 @@
+package ef.master.faq.controller;
+
+import ef.master.faq.dto.StudentRequest;
+import ef.master.faq.dto.StudentResponse;
+import ef.master.faq.service.StudentService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/student")
+public class StudentController {
+
+  private final StudentService studentService;
+
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  public StudentResponse createStudent (@RequestBody StudentRequest studentRequest) {
+    return studentService.save(studentRequest);
+  }
+
+  @GetMapping("/{id}")
+  public StudentResponse getById(@PathVariable Long id) {
+    return studentService.getById(id);
+  }
+
+  @GetMapping
+  public List<StudentResponse> getAll() {
+    return studentService.getAll();
+  }
+
+  @DeleteMapping("/{id}")
+  public void deleteStudent(@PathVariable Long id) {
+    studentService.deleteById(id);
+  }
+
+  @PutMapping("/{id}")
+  public StudentResponse updateStudent(@RequestBody StudentRequest studentRequest, @PathVariable Long id) {
+    return studentService.updateById(studentRequest, id);
+  }
+}
