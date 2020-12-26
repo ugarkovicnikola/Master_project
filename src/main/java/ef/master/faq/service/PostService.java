@@ -22,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,7 @@ public class PostService {
   private final StudentRepository studentRepository;
   private final TagRepository tagRepository;
   private final MapperFacade mapperFacade;
+  private final DtoToCsvConverter dtoToCsvConverter;
   private static final long JPA_PAGINATION_INDEX_DIFFERENCE  = 1;
 
   public PostResponse save(@NotNull @Valid PostRequest postRequest) {
@@ -101,5 +103,18 @@ public class PostService {
       throw new EntityNotFoundException(String.format("Post with ID %s is not found", id));
     }
     postRepository.deleteById(id);
+  }
+
+  public byte[] exportAsCSV() throws IOException {
+    List<PostResponse> postResponseList = postRepository.findAll().stream()
+        .map(post -> {
+          PostResponse map = mapperFacade.map(post, PostResponse.class);
+          map.setNumberOfComments((long) post.getComments().size());
+
+          return map;
+        })
+        .collect(Collectors.toList());
+
+          return dtoToCsvConverter.convert(postResponseList);
   }
 }

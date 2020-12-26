@@ -48,6 +48,10 @@ public class CommentService {
         .collect(Collectors.toList());
   }
 
+  public CommentResponse getById(@NotNull Long id) {
+    return mapperFacade.map(commentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Comment with ID %s is not found",id))), CommentResponse.class);
+  }
+
   public CommentResponse updateById(@NotNull @Valid CommentRequest commentRequest, @NotNull Long id) {
     Comment comment = commentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Comment with ID %s is not found", id)));
     comment.setText(commentRequest.getText());
