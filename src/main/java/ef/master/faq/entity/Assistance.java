@@ -3,6 +3,7 @@ package ef.master.faq.entity;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Entity;
@@ -23,6 +24,7 @@ public class Assistance {
 
   private String nameOfService;
   private String email;
+  @ToString.Exclude
   private String password;
 
   @OneToMany(mappedBy = "assistance")
