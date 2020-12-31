@@ -33,7 +33,7 @@ public class Comment {
 
   @ManyToOne
   @JoinColumn(name = "services_id")
-  private Assistance assistance;
+  private Office office;
 
   @ManyToOne
   @JoinColumn(name = "post_id")

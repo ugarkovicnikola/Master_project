@@ -1,8 +1,8 @@
 package ef.master.faq.service;
 
-import ef.master.faq.dto.StudentRequest;
-import ef.master.faq.entity.Student;
-import ef.master.faq.repository.StudentRepository;
+import ef.master.faq.dto.ProfessorRequest;
+import ef.master.faq.entity.Professor;
+import ef.master.faq.repository.ProfessorRepository;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.junit.Before;
@@ -15,26 +15,28 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class StudentServiceTest {
+public class ProfessorServiceTest {
 
   @Mock
-  private StudentRepository studentRepository;
+  private ProfessorRepository professorRepository;
 
   @Mock
   private MapperFacade mapperFacade;
 
   @InjectMocks
-  private StudentService studentService;
+  private ProfessorService professorService;
 
   @Before
   public void setUp() {
@@ -49,58 +51,58 @@ public class StudentServiceTest {
 
   @Test
   public void save_ShouldPerformCorrectly() {
-    StudentRequest request = new StudentRequest();
+    ProfessorRequest request = new ProfessorRequest();
     request.setEmail("email@email.com");
     request.setFirstName("John");
     request.setLastName("Doe");
     request.setPassword("password111");
 
-    when(studentRepository.existsByEmail(anyString())).thenReturn(false);
+    when(professorRepository.existsByEmail(anyString())).thenReturn(false);
 
-    studentService.save(request);
+    professorService.save(request);
 
-    verify(studentRepository).save(any(Student.class));
+    verify(professorRepository).save(any(Professor.class));
   }
 
-  @Test (expected = EntityExistsException.class)
-  public void save_ExistingStudentEmail_ShouldThrowAnException() {
-    StudentRequest request = new StudentRequest();
+  @Test(expected = EntityExistsException.class)
+  public void save_ExistingProfessorEmail_ShouldThrowAnException() {
+    ProfessorRequest request = new ProfessorRequest();
     request.setEmail("email@email.com");
     request.setFirstName("John");
     request.setLastName("Doe");
     request.setPassword("password111");
 
-    when(studentRepository.existsByEmail(anyString())).thenReturn(true);
+    when(professorRepository.existsByEmail(anyString())).thenReturn(true);
 
-    studentService.save(request);
+    professorService.save(request);
   }
 
   @Test
   public void updateById_ShouldPerformCorrectly() {
-    StudentRequest request = new StudentRequest();
+    ProfessorRequest request = new ProfessorRequest();
     request.setEmail("email@email.com");
     request.setFirstName("John");
     request.setLastName("Doe");
     request.setPassword("password111");
 
-    Student mockStudent = new Student();
-    mockStudent.setId(1L);
+    Professor mockProfessor = new Professor();
+    mockProfessor.setId(1L);
 
-    when(studentRepository.findById(1L)).thenReturn(Optional.of(mockStudent));
+    when(professorRepository.findById(1L)).thenReturn(Optional.of(mockProfessor));
 
-    studentService.updateById(request, 1L);
+    professorService.updateById(request, 1L);
   }
 
   @Test(expected = EntityNotFoundException.class)
-  public void updateById_NonExistingStudentId_ShouldThrowAnException() {
-    StudentRequest request = new StudentRequest();
+  public void updateById_NonExistingProfessorId_ShouldThrowAnException() {
+    ProfessorRequest request = new ProfessorRequest();
     request.setEmail("email@email.com");
     request.setFirstName("John");
     request.setLastName("Doe");
     request.setPassword("password111");
 
-    when(studentRepository.findById(anyLong())).thenReturn(Optional.empty());
+    when(professorRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-    studentService.updateById(request, anyLong());
+    professorService.updateById(request, anyLong());
   }
 }

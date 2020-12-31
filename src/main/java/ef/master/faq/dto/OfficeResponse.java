@@ -5,9 +5,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class AssistanceResponse {
+public class OfficeResponse {
   private Long id;
-  private String nameOfServices;
+  private String name;
   private String email;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;

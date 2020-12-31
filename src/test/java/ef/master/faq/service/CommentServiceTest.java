@@ -1,13 +1,13 @@
 package ef.master.faq.service;
 
 import ef.master.faq.dto.CommentRequest;
-import ef.master.faq.entity.Assistance;
+import ef.master.faq.entity.Office;
 import ef.master.faq.entity.Comment;
 import ef.master.faq.entity.Post;
 import ef.master.faq.entity.Professor;
 import ef.master.faq.entity.Student;
 import ef.master.faq.exception.IncorrectIdException;
-import ef.master.faq.repository.AssistanceRepository;
+import ef.master.faq.repository.OfficeRepository;
 import ef.master.faq.repository.CommentRepository;
 import ef.master.faq.repository.PostRepository;
 import ef.master.faq.repository.ProfessorRepository;
@@ -23,7 +23,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.persistence.EntityNotFoundException;
-import javax.swing.text.html.Option;
 
 import java.util.Optional;
 
@@ -48,7 +47,7 @@ public class CommentServiceTest {
   private ProfessorRepository professorRepository;
 
   @Mock
-  private AssistanceRepository assistanceRepository;
+  private OfficeRepository officeRepository;
 
   @Mock
   private MapperFacade mapperFacade;
@@ -58,7 +57,7 @@ public class CommentServiceTest {
 
   private Student mockStudent;
   private Professor mockProfessor;
-  private Assistance mockAssistance;
+  private Office mockOffice;
   private Post mockPost;
 
   @Before
@@ -77,8 +76,8 @@ public class CommentServiceTest {
     mockProfessor = new Professor();
     mockProfessor.setId(1L);
 
-    mockAssistance = new Assistance();
-    mockAssistance.setId(1L);
+    mockOffice = new Office();
+    mockOffice.setId(1L);
 
     mockPost = new Post();
     mockPost.setId(1L);
@@ -109,7 +108,7 @@ public class CommentServiceTest {
     CommentRequest request = new CommentRequest();
     request.setText("comment 1");
 
-    when(assistanceRepository.findById(anyLong())).thenReturn(Optional.empty());
+    when(officeRepository.findById(anyLong())).thenReturn(Optional.empty());
 
     commentService.save(request);
   }
@@ -166,7 +165,7 @@ public class CommentServiceTest {
   @Test(expected = IncorrectIdException.class)
   public void updateById_IncorrectOfficeId_ShouldThrowAnException() {
     Comment mockComment = new Comment();
-    mockComment.setAssistance(mockAssistance);
+    mockComment.setOffice(mockOffice);
 
     CommentRequest request = new CommentRequest();
     request.setText("comment 1");

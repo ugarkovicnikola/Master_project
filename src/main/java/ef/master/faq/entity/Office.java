@@ -16,18 +16,18 @@ import java.util.List;
 
 @Entity
 @Data
-public class Assistance {
+public class Office {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String nameOfService;
+  private String name;
   private String email;
   @ToString.Exclude
   private String password;
 
-  @OneToMany(mappedBy = "assistance")
+  @OneToMany(mappedBy = "office")
   private List<Comment> comments;
 
   @CreationTimestamp

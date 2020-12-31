@@ -1,8 +1,9 @@
 package ef.master.faq.service;
 
+import ef.master.faq.dto.OfficeRequest;
 import ef.master.faq.dto.StudentRequest;
-import ef.master.faq.entity.Student;
-import ef.master.faq.repository.StudentRepository;
+import ef.master.faq.entity.Office;
+import ef.master.faq.repository.OfficeRepository;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.junit.Before;
@@ -15,6 +16,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -25,16 +27,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class StudentServiceTest {
+public class OfficeServiceTest {
 
   @Mock
-  private StudentRepository studentRepository;
+  private OfficeRepository officeRepository;
 
   @Mock
   private MapperFacade mapperFacade;
 
   @InjectMocks
-  private StudentService studentService;
+  private OfficeService officeService;
 
   @Before
   public void setUp() {
@@ -49,58 +51,55 @@ public class StudentServiceTest {
 
   @Test
   public void save_ShouldPerformCorrectly() {
-    StudentRequest request = new StudentRequest();
+    OfficeRequest request = new OfficeRequest();
     request.setEmail("email@email.com");
-    request.setFirstName("John");
-    request.setLastName("Doe");
+    request.setNameOfService("legal");
     request.setPassword("password111");
 
-    when(studentRepository.existsByEmail(anyString())).thenReturn(false);
+    when(officeRepository.existsByEmail(anyString())).thenReturn(false);
 
-    studentService.save(request);
+    officeService.save(request);
 
-    verify(studentRepository).save(any(Student.class));
+    verify(officeRepository).save(any(Office.class));
   }
 
-  @Test (expected = EntityExistsException.class)
-  public void save_ExistingStudentEmail_ShouldThrowAnException() {
-    StudentRequest request = new StudentRequest();
+  @Test(expected = EntityExistsException.class)
+  public void save_ExistingOfficeEmail_ShouldThrowAnException() {
+    OfficeRequest request = new OfficeRequest();
     request.setEmail("email@email.com");
-    request.setFirstName("John");
-    request.setLastName("Doe");
+    request.setNameOfService("legal");
     request.setPassword("password111");
 
-    when(studentRepository.existsByEmail(anyString())).thenReturn(true);
+    when(officeRepository.existsByEmail(anyString())).thenReturn(true);
 
-    studentService.save(request);
+    officeService.save(request);
   }
 
   @Test
   public void updateById_ShouldPerformCorrectly() {
-    StudentRequest request = new StudentRequest();
+    OfficeRequest request = new OfficeRequest();
     request.setEmail("email@email.com");
-    request.setFirstName("John");
-    request.setLastName("Doe");
+    request.setNameOfService("legal");
     request.setPassword("password111");
 
-    Student mockStudent = new Student();
-    mockStudent.setId(1L);
+    Office mockOffice = new Office();
+    mockOffice.setId(1L);
 
-    when(studentRepository.findById(1L)).thenReturn(Optional.of(mockStudent));
+    when(officeRepository.findById(1L)).thenReturn(Optional.of(mockOffice));
 
-    studentService.updateById(request, 1L);
+    officeService.updateById(request, 1L);
   }
 
   @Test(expected = EntityNotFoundException.class)
-  public void updateById_NonExistingStudentId_ShouldThrowAnException() {
-    StudentRequest request = new StudentRequest();
+  public void updateById_NonExistingOfficeId_ShouldThrowAnException() {
+    OfficeRequest request = new OfficeRequest();
     request.setEmail("email@email.com");
-    request.setFirstName("John");
-    request.setLastName("Doe");
+    request.setNameOfService("legal");
     request.setPassword("password111");
 
-    when(studentRepository.findById(anyLong())).thenReturn(Optional.empty());
+    when(officeRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-    studentService.updateById(request, anyLong());
+    officeService.updateById(request, anyLong());
   }
+
 }

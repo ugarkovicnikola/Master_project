@@ -1,11 +1,8 @@
 package ef.master.faq.controller;
 
-import ef.master.faq.dto.AssistanceRequest;
-import ef.master.faq.dto.AssistanceResponse;
-import ef.master.faq.dto.StudentRequest;
-import ef.master.faq.dto.StudentResponse;
-import ef.master.faq.service.AssistanceService;
-import ef.master.faq.service.StudentService;
+import ef.master.faq.dto.OfficeRequest;
+import ef.master.faq.dto.OfficeResponse;
+import ef.master.faq.service.OfficeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,34 +19,34 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/assistance")
-public class AssistanceController {
+@RequestMapping("/office")
+public class OfficeController {
 
-  private final AssistanceService assistanceService;
+  private final OfficeService officeService;
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public AssistanceResponse createAssistance (@RequestBody AssistanceRequest assistanceRequest) {
-    return assistanceService.save(assistanceRequest);
+  public OfficeResponse createAssistance (@RequestBody OfficeRequest officeRequest) {
+    return officeService.save(officeRequest);
   }
 
   @GetMapping("/{id}")
-  public AssistanceResponse getById(@PathVariable Long id) {
-    return assistanceService.getById(id);
+  public OfficeResponse getById(@PathVariable Long id) {
+    return officeService.getById(id);
   }
 
   @GetMapping
-  public List<AssistanceResponse> getAll() {
-    return assistanceService.getAll();
+  public List<OfficeResponse> getAll() {
+    return officeService.getAll();
   }
 
   @DeleteMapping("/{id}")
   public void deleteAssistance(@PathVariable Long id) {
-    assistanceService.deleteById(id);
+    officeService.deleteById(id);
   }
 
   @PutMapping("/{id}")
-  public AssistanceResponse updateAssistance(@RequestBody AssistanceRequest assistanceRequest, @PathVariable Long id) {
-    return assistanceService.updateById(assistanceRequest, id);
+  public OfficeResponse updateAssistance(@RequestBody OfficeRequest officeRequest, @PathVariable Long id) {
+    return officeService.updateById(officeRequest, id);
   }
 }

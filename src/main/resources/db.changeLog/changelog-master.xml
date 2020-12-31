@@ -1,0 +1,28 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchanglelog-3.4.xsd">
+
+    <changeSet id="001" author="nikolaugarkovic">
+        <sqlFile path="db/changeLog/001-Create_Student_Table.sql"/>
+    </changeSet>
+    <changeSet id="002" author="nikolaugarkovic">
+        <sqlFile path="db/changeLog/002-Create_Professor_Table.sql"/>
+    </changeSet>
+    <changeSet id="003" author="nikolaugarkovic">
+        <sqlFile path="db/changeLog/003-Create_Office_Table.sql"/>
+    </changeSet>
+    <changeSet id="004" author="nikolaugarkovic">
+        <sqlFile path="db/changeLog/004-Create_Post_Table.sql"/>
+    </changeSet>
+    <changeSet id="005" author="nikolaugarkovic">
+        <sqlFile path="db/changeLog/005-Create_Comment_Table.sql"/>
+    </changeSet>
+    <changeSet id="006" author="nikolaugarkovic">
+        <sqlFile path="db/changeLog/006-Create_Tag_Table.sql"/>
+    </changeSet>
+    <changeSet id="007" author="nikolaugarkovic">
+        <sqlFile path="db/changeLog/007-Create_PostTag_Table.sql"/>
+    </changeSet>
+</databaseChangeLog>

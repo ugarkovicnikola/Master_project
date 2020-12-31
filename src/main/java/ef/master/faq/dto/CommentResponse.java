@@ -11,5 +11,7 @@ public class CommentResponse {
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private StudentResponse student;
+  private ProfessorResponse professor;
+  private OfficeResponse office;
   private PostResponse post;
 }

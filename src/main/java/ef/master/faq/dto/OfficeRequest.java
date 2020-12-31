@@ -6,9 +6,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class AssistanceRequest {
+public class OfficeRequest {
   @NotBlank
-  private String nameOfService;
+  private String name;
 
   @Email
   @NotBlank
