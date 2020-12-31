@@ -12,7 +12,7 @@ public class CommentRequest {
   private String text;
   private Long studentId;
   private Long professorId;
-  private Long assistanceId;
+  private Long officeId;
   @NotNull
   private Long postId;
 
@@ -21,7 +21,7 @@ public class CommentRequest {
     int trueStatementsCount =
         (studentId != null ? 1 : 0)
             + (professorId != null  ? 1 : 0)
-            + (assistanceId != null  ? 1 : 0);
+            + (officeId != null  ? 1 : 0);
 
     return trueStatementsCount == 1;
   }
