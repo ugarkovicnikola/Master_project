@@ -22,6 +22,8 @@ public class Comment {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String text;
+  private Long numberOfUpVotes;
+  private Long numberOfDownVotes;
 
   @ManyToOne
   @JoinColumn(name = "student_id")
@@ -32,7 +34,7 @@ public class Comment {
   private Professor professor;
 
   @ManyToOne
-  @JoinColumn(name = "services_id")
+  @JoinColumn(name = "office_id")
   private Office office;
 
   @ManyToOne

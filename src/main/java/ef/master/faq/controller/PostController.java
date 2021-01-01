@@ -3,7 +3,6 @@ package ef.master.faq.controller;
 import ef.master.faq.dto.PageResponse;
 import ef.master.faq.dto.PostRequest;
 import ef.master.faq.dto.PostResponse;
-import ef.master.faq.repository.PostRepository;
 import ef.master.faq.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

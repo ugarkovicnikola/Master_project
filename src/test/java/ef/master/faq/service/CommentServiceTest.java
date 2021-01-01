@@ -169,7 +169,7 @@ public class CommentServiceTest {
 
     CommentRequest request = new CommentRequest();
     request.setText("comment 1");
-    request.setAssistanceId(5L);
+    request.setOfficeId(5L);
 
     when(commentRepository.findById(anyLong())).thenReturn(Optional.of(mockComment));
 

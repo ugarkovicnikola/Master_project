@@ -52,7 +52,10 @@ public class PostService {
     post.setTags(tags);
     postRepository.save(post);
 
-    return mapperFacade.map(post, PostResponse.class);
+    PostResponse postResponse = mapperFacade.map(post, PostResponse.class);
+    postResponse.setNumberOfComments((long) post.getComments().size());
+
+    return postResponse;
   }
 
   public PageResponse<PostResponse> getAllPosts(@NotNull Integer pageNumber, @NotNull Integer pageSize, @NotNull String sortBy) {
@@ -73,7 +76,10 @@ public class PostService {
   }
 
   public PostResponse getById(@NotNull Long id) {
-    return mapperFacade.map(postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Post with ID %s is not found", id))), PostResponse.class);
+    Post post = mapperFacade.map(postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Post with ID %s is not found", id))), Post.class);
+    PostResponse postResponse = mapperFacade.map(post, PostResponse.class);
+    postResponse.setNumberOfComments((long) post.getComments().size());
+    return postResponse;
   }
 
   public PostResponse updateById(@NotNull @Valid PostRequest postRequest, @NotNull Long id) {
@@ -93,7 +99,10 @@ public class PostService {
 
     postRepository.save(post);
 
-    return mapperFacade.map(post, PostResponse.class);
+    PostResponse postResponse = mapperFacade.map(post, PostResponse.class);
+    postResponse.setNumberOfComments((long) post.getComments().size());
+
+    return postResponse;
   }
 
   public void deleteById(@NotNull Long id) {
@@ -116,5 +125,15 @@ public class PostService {
         .collect(Collectors.toList());
 
           return dtoToCsvConverter.convert(postResponseList);
+  }
+
+  public void postUpvote(@NotNull Long id) {
+    Post post = postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Post with ID %s is not found", id)));
+    post.setNumberOfUpVotes(post.getNumberOfUpVotes() + 1L);
+  }
+
+  public void postDownvote(@NotNull Long id) {
+    Post post = postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Post with ID %s is not found", id)));
+    post.setNumberOfDownVotes(post.getNumberOfDownVotes() + 1L);
   }
 }

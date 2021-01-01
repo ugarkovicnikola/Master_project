@@ -1,7 +1,6 @@
 package ef.master.faq.service;
 
 import ef.master.faq.dto.OfficeRequest;
-import ef.master.faq.dto.StudentRequest;
 import ef.master.faq.entity.Office;
 import ef.master.faq.repository.OfficeRepository;
 import ma.glasnost.orika.MapperFacade;
@@ -16,7 +15,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -53,7 +51,7 @@ public class OfficeServiceTest {
   public void save_ShouldPerformCorrectly() {
     OfficeRequest request = new OfficeRequest();
     request.setEmail("email@email.com");
-    request.setNameOfService("legal");
+    request.setName("legal");
     request.setPassword("password111");
 
     when(officeRepository.existsByEmail(anyString())).thenReturn(false);
@@ -67,7 +65,7 @@ public class OfficeServiceTest {
   public void save_ExistingOfficeEmail_ShouldThrowAnException() {
     OfficeRequest request = new OfficeRequest();
     request.setEmail("email@email.com");
-    request.setNameOfService("legal");
+    request.setName("legal");
     request.setPassword("password111");
 
     when(officeRepository.existsByEmail(anyString())).thenReturn(true);
@@ -79,7 +77,7 @@ public class OfficeServiceTest {
   public void updateById_ShouldPerformCorrectly() {
     OfficeRequest request = new OfficeRequest();
     request.setEmail("email@email.com");
-    request.setNameOfService("legal");
+    request.setName("legal");
     request.setPassword("password111");
 
     Office mockOffice = new Office();
@@ -94,12 +92,11 @@ public class OfficeServiceTest {
   public void updateById_NonExistingOfficeId_ShouldThrowAnException() {
     OfficeRequest request = new OfficeRequest();
     request.setEmail("email@email.com");
-    request.setNameOfService("legal");
+    request.setName("legal");
     request.setPassword("password111");
 
     when(officeRepository.findById(anyLong())).thenReturn(Optional.empty());
 
     officeService.updateById(request, anyLong());
   }
-
 }

@@ -26,7 +26,7 @@ public class OfficeController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public OfficeResponse createAssistance (@RequestBody OfficeRequest officeRequest) {
+  public OfficeResponse createOffice (@RequestBody OfficeRequest officeRequest) {
     return officeService.save(officeRequest);
   }
 
@@ -41,12 +41,12 @@ public class OfficeController {
   }
 
   @DeleteMapping("/{id}")
-  public void deleteAssistance(@PathVariable Long id) {
+  public void deleteOffice(@PathVariable Long id) {
     officeService.deleteById(id);
   }
 
   @PutMapping("/{id}")
-  public OfficeResponse updateAssistance(@RequestBody OfficeRequest officeRequest, @PathVariable Long id) {
+  public OfficeResponse updateOffice(@RequestBody OfficeRequest officeRequest, @PathVariable Long id) {
     return officeService.updateById(officeRequest, id);
   }
 }

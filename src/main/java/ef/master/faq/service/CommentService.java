@@ -81,4 +81,14 @@ public class CommentService {
     }
     commentRepository.deleteById(id);
   }
+
+  public void commentUpvote(@NotNull Long id) {
+    Comment comment = commentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Comment with ID %s is not found", id)));
+    comment.setNumberOfUpVotes(comment.getNumberOfUpVotes()+1L);
+  }
+
+  public void commentDownvote(@NotNull Long id) {
+    Comment comment = commentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Comment with ID %s is not found", id)));
+    comment.setNumberOfDownVotes(comment.getNumberOfDownVotes()+1L);
+  }
 }

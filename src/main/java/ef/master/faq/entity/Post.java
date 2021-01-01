@@ -30,6 +30,8 @@ public class Post {
 
   private String title;
   private String content;
+  private Long numberOfUpVotes;
+  private Long numberOfDownVotes;
 
   @ManyToOne
   @JoinColumn(name = "student_id")
