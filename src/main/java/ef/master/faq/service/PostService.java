@@ -53,7 +53,7 @@ public class PostService {
     postRepository.save(post);
 
     PostResponse postResponse = mapperFacade.map(post, PostResponse.class);
-    postResponse.setNumberOfComments((long) post.getComments().size());
+    postResponse.setNumberOfComments(post.getComments().size());
 
     return postResponse;
   }
@@ -75,14 +75,12 @@ public class PostService {
     return pageResponse;
   }
 
-  public PostResponse getById(@NotNull Long id) {
-    Post post = mapperFacade.map(postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Post with ID %s is not found", id))), Post.class);
-    PostResponse postResponse = mapperFacade.map(post, PostResponse.class);
-    postResponse.setNumberOfComments((long) post.getComments().size());
-    return postResponse;
+  public Post getById(@NotNull Long id) {
+    return mapperFacade.map(postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Post with ID %s is not found", id))), Post.class);
   }
 
   public PostResponse updateById(@NotNull @Valid PostRequest postRequest, @NotNull Long id) {
+
     Post post = postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Post with ID %s is not found", id)));
     Student student = studentRepository.findById(postRequest.getStudentId()).orElseThrow(() -> new EntityNotFoundException(String.format("Student with ID %s is not found", postRequest.getStudentId())));
 
@@ -100,7 +98,7 @@ public class PostService {
     postRepository.save(post);
 
     PostResponse postResponse = mapperFacade.map(post, PostResponse.class);
-    postResponse.setNumberOfComments((long) post.getComments().size());
+    postResponse.setNumberOfComments(post.getComments().size());
 
     return postResponse;
   }
@@ -118,22 +116,26 @@ public class PostService {
     List<PostResponse> postResponseList = postRepository.findAll().stream()
         .map(post -> {
           PostResponse map = mapperFacade.map(post, PostResponse.class);
-          map.setNumberOfComments((long) post.getComments().size());
+          map.setNumberOfComments(post.getComments().size());
 
           return map;
         })
         .collect(Collectors.toList());
 
-          return dtoToCsvConverter.convert(postResponseList);
+    return dtoToCsvConverter.convert(postResponseList);
   }
 
-  public void postUpvote(@NotNull Long id) {
-    Post post = postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Post with ID %s is not found", id)));
-    post.setNumberOfUpVotes(post.getNumberOfUpVotes() + 1L);
+  public void upVote(@NotNull Long id) {
+
+    Post post = this.getById(id);
+    post.upVote();
+    postRepository.save(post);
   }
 
-  public void postDownvote(@NotNull Long id) {
-    Post post = postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Post with ID %s is not found", id)));
-    post.setNumberOfDownVotes(post.getNumberOfDownVotes() + 1L);
+  public void downVote(@NotNull Long id) {
+
+    Post post = this.getById(id);
+    post.downVote();
+    postRepository.save(post);
   }
 }

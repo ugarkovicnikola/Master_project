@@ -51,4 +51,16 @@ public class Post {
   @UpdateTimestamp
   @Setter(AccessLevel.PRIVATE)
   private LocalDateTime updatedAt;
+
+  public void upVote() {
+
+    long upVotes = this.getNumberOfUpVotes() == null ? 0 : this.getNumberOfUpVotes();
+    this.setNumberOfUpVotes(upVotes + 1L);
+  }
+
+  public void downVote() {
+
+    long downVotes = this.getNumberOfDownVotes() == null ? 0 : this.getNumberOfDownVotes();
+    this.setNumberOfDownVotes(downVotes + 1L);
+  }
 }

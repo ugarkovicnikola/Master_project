@@ -22,15 +22,15 @@ public class VoteService {
     Long commentId = voteRequest.getCommentId();
     VoteEnum voteEnum = voteRequest.getVote();
 
-   if (voteEnum.equals(VoteEnum.UPVOTE)) {
+   if (VoteEnum.UPVOTE.equals(voteEnum)) {
       if (postId != null) {
-        postService.postUpvote(postId);
+        postService.upVote(postId);
       } else {
         commentService.commentUpvote(commentId);
       }
     } else {
       if (postId != null) {
-        postService.postDownvote(postId);
+        postService.downVote(postId);
       } else {
         commentService.commentDownvote(commentId);
       }

@@ -3,8 +3,10 @@ package ef.master.faq.controller;
 import ef.master.faq.dto.PageResponse;
 import ef.master.faq.dto.PostRequest;
 import ef.master.faq.dto.PostResponse;
+import ef.master.faq.entity.Post;
 import ef.master.faq.service.PostService;
 import lombok.RequiredArgsConstructor;
+import ma.glasnost.orika.MapperFacade;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostController {
 
   private final PostService postService;
+  private final MapperFacade mapperFacade;
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
@@ -32,7 +35,10 @@ public class PostController {
 
   @GetMapping("/{id}")
   public PostResponse getById(@PathVariable Long id) {
-    return postService.getById(id);
+    Post post = postService.getById(id);
+    PostResponse postResponse = mapperFacade.map(post, PostResponse.class);
+    postResponse.setNumberOfComments(post.getComments().size());
+    return postResponse;
   }
 
   @GetMapping

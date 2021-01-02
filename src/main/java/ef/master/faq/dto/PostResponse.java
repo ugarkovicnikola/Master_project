@@ -14,5 +14,5 @@ public class PostResponse {
   private LocalDateTime updatedAt;
   private StudentResponse student;
   private Set<TagResponse> tags;
-  private Long numberOfComments;
+  private Integer numberOfComments;
 }
