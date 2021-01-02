@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OfficeRepository extends JpaRepository<Office, Long> {
   boolean existsByEmail(String email);
+  Office findByEmail(String email);
 }

@@ -6,6 +6,8 @@ import ef.master.faq.entity.Student;
 import ef.master.faq.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -24,14 +26,18 @@ public class StudentService {
   private final StudentRepository studentRepository;
   private final MapperFacade mapperFacade;
 
+  private final PasswordEncoder passwordEncoder;
+
   public StudentResponse save(@NotNull @Valid StudentRequest studentRequest) {
     Student student = mapperFacade.map(studentRequest, Student.class);
 
     boolean isEmailAlreadyTaken = studentRepository.existsByEmail(student.getEmail());
 
+
     if (isEmailAlreadyTaken) {
       throw new EntityExistsException(String.format("Email %s is already in use", studentRequest.getEmail()));
     }
+    student.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
     studentRepository.save(student);
 
     return mapperFacade.map(student, StudentResponse.class);
@@ -50,10 +56,9 @@ public class StudentService {
 
   public StudentResponse updateById(@NotNull @Valid StudentRequest studentRequest, @NotNull Long id) {
     Student student = studentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Student with ID %s is not found", id)));
-    student.setFirstName(studentRequest.getFirstName());
-    student.setLastName(studentRequest.getLastName());
-    student.setEmail(studentRequest.getEmail());
-    student.setPassword(studentRequest.getPassword());
+    mapperFacade.map(studentRequest, student);
+
+    student.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
     studentRepository.save(student);
 
     return mapperFacade.map(student, StudentResponse.class);
