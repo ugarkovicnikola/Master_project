@@ -30,7 +30,8 @@ public class PostController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public PostResponse createPost(@RequestBody PostRequest postRequest) {
-    return postService.save(postRequest);
+    Post post = postService.save(postRequest);
+    return mapperFacade.map(post, PostResponse.class);
   }
 
   @GetMapping("/{id}")
@@ -56,6 +57,9 @@ public class PostController {
 
   @PutMapping("/{id}")
   public PostResponse updateById(@RequestBody PostRequest postRequest, @PathVariable Long id) {
-    return postService.updateById(postRequest, id);
+    Post post = postService.updateById(postRequest, id);
+    PostResponse postResponse = mapperFacade.map(post, PostResponse.class);
+    postResponse.setNumberOfComments(post.getComments().size());
+    return postResponse;
   }
 }

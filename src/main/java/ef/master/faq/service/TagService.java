@@ -1,7 +1,6 @@
 package ef.master.faq.service;
 
 import ef.master.faq.dto.TagRequest;
-import ef.master.faq.dto.TagResponse;
 import ef.master.faq.entity.Tag;
 import ef.master.faq.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,21 +22,24 @@ public class TagService {
   private final TagRepository tagRepository;
   private final MapperFacade mapperFacade;
 
-  public TagResponse save(@NotNull @Valid TagRequest tagRequest) {
+  public Tag save(@NotNull @Valid TagRequest tagRequest) {
+
     Tag tag = mapperFacade.map(tagRequest, Tag.class);
 
     tagRepository.save(tag);
 
-    return mapperFacade.map(tag, TagResponse.class);
+    return mapperFacade.map(tag, Tag.class);
   }
 
-  public List<TagResponse> getAll() {
+  public List<Tag> getAll() {
+
     return tagRepository.findAll().stream()
-        .map(tag -> mapperFacade.map(tag, TagResponse.class))
+        .map(tag -> mapperFacade.map(tag, Tag.class))
         .collect(Collectors.toList());
   }
 
   public void deleteById(@NotNull Long id) {
+
     boolean tagExists = tagRepository.existsById(id);
 
     if (!tagExists) {

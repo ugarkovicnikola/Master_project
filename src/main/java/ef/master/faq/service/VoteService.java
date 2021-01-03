@@ -23,16 +23,16 @@ public class VoteService {
     VoteEnum voteEnum = voteRequest.getVote();
 
    if (VoteEnum.UPVOTE.equals(voteEnum)) {
-      if (postId != null) {
+      if (postId > 0) {
         postService.upVote(postId);
       } else {
-        commentService.commentUpvote(commentId);
+        commentService.upVote(commentId);
       }
     } else {
-      if (postId != null) {
+      if (postId > 0) {
         postService.downVote(postId);
       } else {
-        commentService.commentDownvote(commentId);
+        commentService.downVote(commentId);
       }
     }
   }

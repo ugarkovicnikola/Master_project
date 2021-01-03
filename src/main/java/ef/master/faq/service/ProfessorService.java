@@ -1,14 +1,11 @@
 package ef.master.faq.service;
 
 import ef.master.faq.dto.ProfessorRequest;
-import ef.master.faq.dto.ProfessorResponse;
-import ef.master.faq.dto.StudentRequest;
-import ef.master.faq.dto.StudentResponse;
 import ef.master.faq.entity.Professor;
-import ef.master.faq.entity.Student;
 import ef.master.faq.repository.ProfessorRepository;
 import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -26,8 +23,10 @@ public class ProfessorService {
 
   private final ProfessorRepository professorRepository;
   private final MapperFacade mapperFacade;
+  private final PasswordEncoder passwordEncoder;
 
-  public ProfessorResponse save(@NotNull @Valid ProfessorRequest professorRequest) {
+  public Professor save(@NotNull @Valid ProfessorRequest professorRequest) {
+
     Professor professor = mapperFacade.map(professorRequest, Professor.class);
 
     boolean isEmailAlreadyTaken = professorRepository.existsByEmail(professor.getEmail());
@@ -35,34 +34,39 @@ public class ProfessorService {
     if (isEmailAlreadyTaken) {
       throw new EntityExistsException(String.format("Email %s is already in use", professorRequest.getEmail()));
     }
+    professor.setPassword(passwordEncoder.encode(professorRequest.getPassword()));
     professorRepository.save(professor);
 
-    return mapperFacade.map(professor, ProfessorResponse.class);
+    return professor;
   }
 
-  public List<ProfessorResponse> getAll() {
+  public List<Professor> getAll() {
+
     return professorRepository.findAll().stream()
-        .map(professor -> mapperFacade.map(professor, ProfessorResponse.class))
+        .map(professor -> mapperFacade.map(professor, Professor.class))
         .collect(Collectors.toList());
   }
   
-  public ProfessorResponse getById(@NotNull Long id) {
-    return mapperFacade.map(professorRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException(String.format("Professor with ID %s is not found", id))), ProfessorResponse.class);
+  public Professor getById(@NotNull Long id) {
+
+    return mapperFacade.map(professorRepository.findById(id).orElseThrow(()
+        -> new EntityNotFoundException(String.format("Professor with ID %s is not found", id))), Professor.class);
   }
 
-  public ProfessorResponse updateById(@NotNull @Valid ProfessorRequest professorRequest, @NotNull Long id) {
-    Professor professor = professorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Professor with ID %s is not found", id)));
-    professor.setFirstName(professorRequest.getFirstName());
-    professor.setLastName(professorRequest.getLastName());
-    professor.setEmail(professorRequest.getEmail());
-    professor.setPassword(professorRequest.getPassword());
+  public Professor updateById(@NotNull @Valid ProfessorRequest professorRequest, @NotNull Long id) {
+
+    Professor professor = professorRepository.findById(id).orElseThrow(()
+        -> new EntityNotFoundException(String.format("Professor with ID %s is not found", id)));
+    mapperFacade.map(professorRequest, professor);
+
+    professor.setPassword(passwordEncoder.encode(professorRequest.getPassword()));
     professorRepository.save(professor);
     
-    return mapperFacade.map(professor, ProfessorResponse.class);
+    return mapperFacade.map(professor, Professor.class);
   }
   
   public void deleteById(@NotNull Long id) {
+
     boolean professorExists = professorRepository.existsById(id);
     
     if (!professorExists) {

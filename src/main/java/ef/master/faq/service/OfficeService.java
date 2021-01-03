@@ -1,11 +1,11 @@
 package ef.master.faq.service;
 
 import ef.master.faq.dto.OfficeRequest;
-import ef.master.faq.dto.OfficeResponse;
 import ef.master.faq.entity.Office;
 import ef.master.faq.repository.OfficeRepository;
 import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -23,8 +23,10 @@ public class OfficeService {
 
   private final OfficeRepository officeRepository;
   private final MapperFacade mapperFacade;
+  private final PasswordEncoder passwordEncoder;
 
-  public OfficeResponse save(@NotNull @Valid OfficeRequest officeRequest) {
+  public Office save(@NotNull @Valid OfficeRequest officeRequest) {
+
     Office office = mapperFacade.map(officeRequest, Office.class);
 
     boolean isEmailAlreadyTaken = officeRepository.existsByEmail(office.getEmail());
@@ -32,33 +34,40 @@ public class OfficeService {
     if (isEmailAlreadyTaken) {
       throw new EntityExistsException(String.format("Email %s is already in use", officeRequest.getEmail()));
     }
+    office.setPassword(passwordEncoder.encode(officeRequest.getPassword()));
     officeRepository.save(office);
 
-    return mapperFacade.map(office, OfficeResponse.class);
+    return office;
   }
 
-  public List<OfficeResponse> getAll() {
+  public List<Office> getAll() {
+
     return officeRepository.findAll().stream()
-        .map(office -> mapperFacade.map(office, OfficeResponse.class))
+        .map(office -> mapperFacade.map(office, Office.class))
         .collect(Collectors.toList());
   }
   
-  public OfficeResponse getById(@NotNull Long id) {
+  public Office getById(@NotNull Long id) {
+
     return mapperFacade.map(officeRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException(String.format("Service with ID %s is not found", id))), OfficeResponse.class);
+        .orElseThrow(() -> new EntityNotFoundException(String.format
+            ("Service with ID %s is not found", id))), Office.class);
   }
 
-  public OfficeResponse updateById(@NotNull @Valid OfficeRequest officeRequest, @NotNull Long id) {
-    Office office = officeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Service with ID %s is not found", id)));
-    office.setName(officeRequest.getName());
-    office.setEmail(officeRequest.getEmail());
-    office.setPassword(officeRequest.getPassword());
+  public Office updateById(@NotNull @Valid OfficeRequest officeRequest, @NotNull Long id) {
+
+    Office office = officeRepository.findById(id).orElseThrow(()
+        -> new EntityNotFoundException(String.format("Service with ID %s is not found", id)));
+    mapperFacade.map(officeRequest, office);
+
+    office.setPassword(passwordEncoder.encode(officeRequest.getPassword()));
     officeRepository.save(office);
     
-    return mapperFacade.map(office, OfficeResponse.class);
+    return mapperFacade.map(office, Office.class);
   }
   
   public void deleteById(@NotNull Long id) {
+
     boolean professorExists = officeRepository.existsById(id);
     
     if (!professorExists) {

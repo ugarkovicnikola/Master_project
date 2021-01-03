@@ -26,7 +26,10 @@ public class ExceptionHandlers {
   public Set<String> handleConstraintViolationException(ConstraintViolationException exception) {
 
     return exception.getConstraintViolations().stream()
-        .map(violation -> String.format("%s %s", ((PathImpl) violation.getPropertyPath()).getLeafNode(), violation.getMessage()))
+        .map(violation -> String.format("%s %s", ((PathImpl) violation
+                .getPropertyPath())
+                .getLeafNode(),
+            violation.getMessage()))
         .collect(Collectors.toSet());
   }
 

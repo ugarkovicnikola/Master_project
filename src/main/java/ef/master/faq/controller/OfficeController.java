@@ -2,8 +2,10 @@ package ef.master.faq.controller;
 
 import ef.master.faq.dto.OfficeRequest;
 import ef.master.faq.dto.OfficeResponse;
+import ef.master.faq.entity.Office;
 import ef.master.faq.service.OfficeService;
 import lombok.RequiredArgsConstructor;
+import ma.glasnost.orika.MapperFacade;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,21 +25,28 @@ import java.util.List;
 public class OfficeController {
 
   private final OfficeService officeService;
+  private final MapperFacade mapperFacade;
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public OfficeResponse createOffice (@RequestBody OfficeRequest officeRequest) {
-    return officeService.save(officeRequest);
+    Office office = officeService.save(officeRequest);
+
+    return mapperFacade.map(office, OfficeResponse.class);
   }
 
   @GetMapping("/{id}")
   public OfficeResponse getById(@PathVariable Long id) {
-    return officeService.getById(id);
+    Office office = officeService.getById(id);
+
+    return mapperFacade.map(office, OfficeResponse.class);
   }
 
   @GetMapping
   public List<OfficeResponse> getAll() {
-    return officeService.getAll();
+    List<Office> officeList = officeService.getAll();
+
+    return mapperFacade.mapAsList(officeList, OfficeResponse.class);
   }
 
   @DeleteMapping("/{id}")
@@ -47,6 +56,8 @@ public class OfficeController {
 
   @PutMapping("/{id}")
   public OfficeResponse updateOffice(@RequestBody OfficeRequest officeRequest, @PathVariable Long id) {
-    return officeService.updateById(officeRequest, id);
+    Office office = officeService.updateById(officeRequest, id);
+
+    return mapperFacade.map(office, OfficeResponse.class);
   }
 }

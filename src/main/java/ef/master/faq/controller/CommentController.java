@@ -3,8 +3,10 @@ package ef.master.faq.controller;
 import ef.master.faq.dto.CommentRequest;
 import ef.master.faq.dto.CommentResponse;
 import ef.master.faq.dto.PostRequest;
+import ef.master.faq.entity.Comment;
 import ef.master.faq.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import ma.glasnost.orika.MapperFacade;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,21 +26,28 @@ import java.util.List;
 public class CommentController {
 
   private final CommentService commentService;
+  private final MapperFacade mapperFacade;
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public CommentResponse createComment(@RequestBody CommentRequest commentRequest) {
-    return commentService.save(commentRequest);
+    Comment comment = commentService.save(commentRequest);
+
+    return mapperFacade.map(comment, CommentResponse.class);
   }
 
   @GetMapping("/id")
   public CommentResponse getById(@PathVariable Long id) {
-    return commentService.getById(id);
+    Comment comment = commentService.getById(id);
+
+    return mapperFacade.map(comment, CommentResponse.class);
   }
 
   @GetMapping
   public List<CommentResponse> getAll() {
-    return commentService.getAll();
+    List<Comment> comment = commentService.getAll();
+
+    return mapperFacade.mapAsList(comment, CommentResponse.class);
   }
 
   @DeleteMapping("/{id}")
@@ -48,6 +57,8 @@ public class CommentController {
 
   @PutMapping
   public CommentResponse updateById(@RequestBody CommentRequest commentRequest, @PathVariable Long id) {
-    return commentService.updateById(commentRequest,id);
+    Comment comment = commentService.updateById(commentRequest, id);
+
+    return mapperFacade.map(comment, CommentResponse.class);
   }
 }

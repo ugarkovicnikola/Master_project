@@ -19,6 +19,7 @@ import java.util.List;
 public class DtoToCsvConverter {
 
   public byte[] convert(List<PostResponse> postList) throws IOException {
+
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
 

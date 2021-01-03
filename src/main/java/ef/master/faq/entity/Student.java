@@ -39,5 +39,4 @@ public class Student {
   @CreationTimestamp
   @Setter(AccessLevel.PRIVATE)
   private LocalDateTime updatedAt;
-
 }

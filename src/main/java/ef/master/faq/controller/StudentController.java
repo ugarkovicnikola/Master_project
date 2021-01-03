@@ -2,8 +2,10 @@ package ef.master.faq.controller;
 
 import ef.master.faq.dto.StudentRequest;
 import ef.master.faq.dto.StudentResponse;
+import ef.master.faq.entity.Student;
 import ef.master.faq.service.StudentService;
 import lombok.RequiredArgsConstructor;
+import ma.glasnost.orika.MapperFacade;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,21 +25,30 @@ import java.util.List;
 public class StudentController {
 
   private final StudentService studentService;
+  private final MapperFacade mapperFacade;
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public StudentResponse createStudent (@RequestBody StudentRequest studentRequest) {
-    return studentService.save(studentRequest);
+
+    Student student = studentService.save(studentRequest);
+
+    return mapperFacade.map(student, StudentResponse.class);
   }
 
   @GetMapping("/{id}")
   public StudentResponse getById(@PathVariable Long id) {
-    return studentService.getById(id);
+
+    Student student = studentService.getById(id);
+
+    return mapperFacade.map(student, StudentResponse.class);
   }
 
   @GetMapping
   public List<StudentResponse> getAll() {
-    return studentService.getAll();
+    List<Student> studentList = studentService.getAll();
+
+    return mapperFacade.mapAsList(studentList, StudentResponse.class);
   }
 
   @DeleteMapping("/{id}")
@@ -47,6 +58,9 @@ public class StudentController {
 
   @PutMapping("/{id}")
   public StudentResponse updateStudent(@RequestBody StudentRequest studentRequest, @PathVariable Long id) {
-    return studentService.updateById(studentRequest, id);
+
+    Student student = studentService.updateById(studentRequest, id);
+
+    return mapperFacade.map(student, StudentResponse.class);
   }
 }

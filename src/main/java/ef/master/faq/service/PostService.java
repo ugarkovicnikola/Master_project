@@ -36,11 +36,14 @@ public class PostService {
   private final TagRepository tagRepository;
   private final MapperFacade mapperFacade;
   private final DtoToCsvConverter dtoToCsvConverter;
+  private final PostNotificationService postNotificationService;
   private static final long JPA_PAGINATION_INDEX_DIFFERENCE  = 1;
 
-  public PostResponse save(@NotNull @Valid PostRequest postRequest) {
+  public Post save(@NotNull @Valid PostRequest postRequest) {
+
     Post post = mapperFacade.map(postRequest, Post.class);
-    Student student = studentRepository.findById(postRequest.getStudentId()).orElseThrow(() -> new EntityNotFoundException(String.format("Student with ID %s is not found", postRequest.getStudentId())));
+    Student student = studentRepository.findById(postRequest.getStudentId()).orElseThrow(()
+        -> new EntityNotFoundException(String.format("Student with ID %s is not found", postRequest.getStudentId())));
 
     List<Tag> tags = tagRepository.findAllByIdIn(postRequest.getTagIds());
 
@@ -52,13 +55,13 @@ public class PostService {
     post.setTags(tags);
     postRepository.save(post);
 
-    PostResponse postResponse = mapperFacade.map(post, PostResponse.class);
-    postResponse.setNumberOfComments(post.getComments().size());
+//    postNotificationService.sendNotification(student);
 
-    return postResponse;
+    return post;
   }
 
   public PageResponse<PostResponse> getAllPosts(@NotNull Integer pageNumber, @NotNull Integer pageSize, @NotNull String sortBy) {
+
     Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
 
     Page<Post> pagedResult = postRepository.findAll(pageable);
@@ -76,13 +79,17 @@ public class PostService {
   }
 
   public Post getById(@NotNull Long id) {
-    return mapperFacade.map(postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Post with ID %s is not found", id))), Post.class);
+
+    return mapperFacade.map(postRepository.findById(id).orElseThrow(()
+        -> new EntityNotFoundException(String.format("Post with ID %s is not found", id))), Post.class);
   }
 
-  public PostResponse updateById(@NotNull @Valid PostRequest postRequest, @NotNull Long id) {
+  public Post updateById(@NotNull @Valid PostRequest postRequest, @NotNull Long id) {
 
-    Post post = postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Post with ID %s is not found", id)));
-    Student student = studentRepository.findById(postRequest.getStudentId()).orElseThrow(() -> new EntityNotFoundException(String.format("Student with ID %s is not found", postRequest.getStudentId())));
+    Post post = postRepository.findById(id).orElseThrow(()
+        -> new EntityNotFoundException(String.format("Post with ID %s is not found", id)));
+    Student student = studentRepository.findById(postRequest.getStudentId()).orElseThrow(()
+        -> new EntityNotFoundException(String.format("Student with ID %s is not found", postRequest.getStudentId())));
 
     List<Tag> tags = tagRepository.findAllByIdIn(postRequest.getTagIds());
 
@@ -97,13 +104,11 @@ public class PostService {
 
     postRepository.save(post);
 
-    PostResponse postResponse = mapperFacade.map(post, PostResponse.class);
-    postResponse.setNumberOfComments(post.getComments().size());
-
-    return postResponse;
+    return post;
   }
 
   public void deleteById(@NotNull Long id) {
+
     boolean postExists = postRepository.existsById(id);
 
     if (!postExists) {
@@ -113,6 +118,7 @@ public class PostService {
   }
 
   public byte[] exportAsCSV() throws IOException {
+
     List<PostResponse> postResponseList = postRepository.findAll().stream()
         .map(post -> {
           PostResponse map = mapperFacade.map(post, PostResponse.class);

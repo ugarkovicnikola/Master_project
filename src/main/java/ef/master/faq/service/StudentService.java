@@ -1,12 +1,10 @@
 package ef.master.faq.service;
 
 import ef.master.faq.dto.StudentRequest;
-import ef.master.faq.dto.StudentResponse;
 import ef.master.faq.entity.Student;
 import ef.master.faq.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -28,7 +26,8 @@ public class StudentService {
 
   private final PasswordEncoder passwordEncoder;
 
-  public StudentResponse save(@NotNull @Valid StudentRequest studentRequest) {
+  public Student save(@NotNull @Valid StudentRequest studentRequest) {
+
     Student student = mapperFacade.map(studentRequest, Student.class);
 
     boolean isEmailAlreadyTaken = studentRepository.existsByEmail(student.getEmail());
@@ -40,31 +39,36 @@ public class StudentService {
     student.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
     studentRepository.save(student);
 
-    return mapperFacade.map(student, StudentResponse.class);
+    return student;
   }
 
-  public List<StudentResponse> getAll() {
+  public List<Student> getAll() {
+
     return studentRepository.findAll().stream()
-        .map(student -> mapperFacade.map(student, StudentResponse.class))
+        .map(student -> mapperFacade.map(student, Student.class))
         .collect(Collectors.toList());
   }
 
-  public StudentResponse getById(@NotNull Long id) {
-    return mapperFacade.map(studentRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException(String.format("Student with ID %s is not found", id))), StudentResponse.class);
+  public Student getById(@NotNull Long id) {
+
+    return mapperFacade.map(studentRepository.findById(id).orElseThrow(()
+        -> new EntityNotFoundException(String.format("Student with ID %s is not found", id))), Student.class);
   }
 
-  public StudentResponse updateById(@NotNull @Valid StudentRequest studentRequest, @NotNull Long id) {
-    Student student = studentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Student with ID %s is not found", id)));
+  public Student updateById(@NotNull @Valid StudentRequest studentRequest, @NotNull Long id) {
+
+    Student student = studentRepository.findById(id).orElseThrow(()
+        -> new EntityNotFoundException(String.format("Student with ID %s is not found", id)));
     mapperFacade.map(studentRequest, student);
 
     student.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
     studentRepository.save(student);
 
-    return mapperFacade.map(student, StudentResponse.class);
+    return student;
   }
 
   public void deleteById(@NotNull Long id) {
+
     boolean studentExists = studentRepository.existsById(id);
 
     if (!studentExists) {
