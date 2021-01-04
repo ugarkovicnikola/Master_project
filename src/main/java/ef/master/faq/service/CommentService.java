@@ -2,11 +2,15 @@ package ef.master.faq.service;
 
 import ef.master.faq.dto.CommentRequest;
 import ef.master.faq.entity.Comment;
+import ef.master.faq.entity.Office;
 import ef.master.faq.entity.Post;
+import ef.master.faq.entity.Professor;
 import ef.master.faq.entity.Student;
 import ef.master.faq.exception.IncorrectIdException;
 import ef.master.faq.repository.CommentRepository;
+import ef.master.faq.repository.OfficeRepository;
 import ef.master.faq.repository.PostRepository;
+import ef.master.faq.repository.ProfessorRepository;
 import ef.master.faq.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
@@ -26,17 +30,36 @@ public class CommentService {
 
   private final CommentRepository commentRepository;
   private final StudentRepository studentRepository;
+  private final ProfessorRepository professorRepository;
+  private final OfficeRepository officeRepository;
   private final PostRepository postRepository;
   private final MapperFacade mapperFacade;
 
   public Comment save(@NotNull @Valid CommentRequest commentRequest) {
 
     Comment comment = mapperFacade.map(commentRequest, Comment.class);
-    Student student = studentRepository.findById(commentRequest.getStudentId()).orElseThrow(()
-        -> new EntityNotFoundException(String.format("Student with ID %s is not found", commentRequest.getStudentId())));
+
+    if (commentRequest.getStudentId() > 0) {
+      Student student = studentRepository.findById(commentRequest.getStudentId()).orElseThrow(()
+          -> new EntityNotFoundException(String.format("Student with ID %s is not found", commentRequest.getStudentId())));
+      comment.setStudent(student);
+    }
+
+    if (commentRequest.getProfessorId() > 0) {
+      Professor professor = professorRepository.findById(commentRequest.getProfessorId()).orElseThrow(()
+          -> new EntityNotFoundException(String.format("Professor with ID %s is not found", commentRequest.getProfessorId())));
+      comment.setProfessor(professor);
+    }
+
+    if (commentRequest.getOfficeId() > 0) {
+      Office office = officeRepository.findById(commentRequest.getOfficeId()).orElseThrow(()
+          -> new EntityNotFoundException(String.format("Office with ID %s is not found", commentRequest.getOfficeId())));
+      comment.setOffice(office);
+    }
+
     Post post = postRepository.findById(commentRequest.getPostId()).orElseThrow(()
         -> new EntityNotFoundException(String.format("Post with ID %s is not found", commentRequest.getPostId())));
-    comment.setStudent(student);
+
     comment.setPost(post);
 
     commentRepository.save(comment);
@@ -63,10 +86,28 @@ public class CommentService {
         -> new EntityNotFoundException(String.format("Comment with ID %s is not found", id)));
     comment.setText(commentRequest.getText());
 
-    boolean studentIdMatching = comment.getStudent().getId().equals(commentRequest.getStudentId());
+    if (comment.getStudent() != null) {
+      boolean studentIdMatching = comment.getStudent().getId().equals(commentRequest.getStudentId());
 
-    if (!studentIdMatching) {
-      throw new IncorrectIdException("User id's are not matching");
+      if (!studentIdMatching) {
+        throw new IncorrectIdException("Student id's are not matching");
+      }
+    }
+
+    if (comment.getProfessor() != null) {
+      boolean professorIdMatching = comment.getProfessor().getId().equals(commentRequest.getProfessorId());
+
+      if (!professorIdMatching) {
+        throw new IncorrectIdException("Professor id's are not matching");
+      }
+    }
+
+    if (comment.getOffice() != null) {
+      boolean officeIdMatching = comment.getOffice().getId().equals(commentRequest.getOfficeId());
+
+      if (!officeIdMatching) {
+        throw new IncorrectIdException("Office id's are not matching");
+      }
     }
 
     boolean postIdMatching = comment.getPost().getId().equals(commentRequest.getPostId());
