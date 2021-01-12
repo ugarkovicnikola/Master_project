@@ -23,6 +23,7 @@ public class OfficeService {
 
   private final OfficeRepository officeRepository;
   private final MapperFacade mapperFacade;
+  private final AccountNotificationService accountNotificationService;
   private final PasswordEncoder passwordEncoder;
 
   public Office save(@NotNull @Valid OfficeRequest officeRequest) {
@@ -36,6 +37,7 @@ public class OfficeService {
     }
     office.setPassword(passwordEncoder.encode(officeRequest.getPassword()));
     officeRepository.save(office);
+    accountNotificationService.sendNotificationToOffice(office);
 
     return office;
   }

@@ -23,6 +23,7 @@ public class StudentService {
 
   private final StudentRepository studentRepository;
   private final MapperFacade mapperFacade;
+  private final AccountNotificationService accountNotificationService;
 
   private final PasswordEncoder passwordEncoder;
 
@@ -38,6 +39,7 @@ public class StudentService {
     }
     student.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
     studentRepository.save(student);
+    accountNotificationService.sendNotificationToStudent(student);
 
     return student;
   }

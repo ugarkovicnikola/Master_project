@@ -36,7 +36,7 @@ public class PostService {
   private final TagRepository tagRepository;
   private final MapperFacade mapperFacade;
   private final DtoToCsvConverter dtoToCsvConverter;
-  private final PostNotificationService postNotificationService;
+  private final AccountNotificationService accountNotificationService;
   private static final long JPA_PAGINATION_INDEX_DIFFERENCE  = 1;
 
   public Post save(@NotNull @Valid PostRequest postRequest) {
@@ -54,8 +54,6 @@ public class PostService {
     post.setStudent(student);
     post.setTags(tags);
     postRepository.save(post);
-
-//    postNotificationService.sendNotification(student);
 
     return post;
   }
@@ -76,6 +74,13 @@ public class PostService {
     .collect(Collectors.toList()));
 
     return pageResponse;
+  }
+
+  public List<Post> getByStudentId(@NotNull Long id) {
+
+    return postRepository.findByStudentId(id).stream()
+        .map(post -> mapperFacade.map(post, Post.class))
+        .collect(Collectors.toList());
   }
 
   public Post getById(@NotNull Long id) {

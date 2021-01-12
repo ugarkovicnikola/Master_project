@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/post")
@@ -48,6 +50,12 @@ public class PostController {
                                            @RequestParam String sortBy) {
 
     return postService.getAllPosts(pageNumber,pageSize,sortBy);
+  }
+
+  @GetMapping("/student/{id}")
+  public List<PostResponse> getByStudentId(@PathVariable Long id) {
+    List<Post> postList = postService.getByStudentId(id);
+    return mapperFacade.mapAsList(postList, PostResponse.class);
   }
 
   @DeleteMapping("/{id}")

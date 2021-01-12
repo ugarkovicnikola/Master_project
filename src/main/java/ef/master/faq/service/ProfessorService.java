@@ -23,6 +23,7 @@ public class ProfessorService {
 
   private final ProfessorRepository professorRepository;
   private final MapperFacade mapperFacade;
+  private final AccountNotificationService accountNotificationService;
   private final PasswordEncoder passwordEncoder;
 
   public Professor save(@NotNull @Valid ProfessorRequest professorRequest) {
@@ -36,6 +37,7 @@ public class ProfessorService {
     }
     professor.setPassword(passwordEncoder.encode(professorRequest.getPassword()));
     professorRepository.save(professor);
+    accountNotificationService.sendNotificationToProfessor(professor);
 
     return professor;
   }

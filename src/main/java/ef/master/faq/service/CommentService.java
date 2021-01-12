@@ -33,6 +33,7 @@ public class CommentService {
   private final ProfessorRepository professorRepository;
   private final OfficeRepository officeRepository;
   private final PostRepository postRepository;
+  private final CommentNotificationService commentNotificationService;
   private final MapperFacade mapperFacade;
 
   public Comment save(@NotNull @Valid CommentRequest commentRequest) {
@@ -63,6 +64,7 @@ public class CommentService {
     comment.setPost(post);
 
     commentRepository.save(comment);
+    commentNotificationService.sendNotification(post.getStudent(), comment);
 
     return mapperFacade.map(comment, Comment.class);
   }
