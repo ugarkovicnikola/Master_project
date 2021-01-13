@@ -49,5 +49,4 @@ public class TagServiceTest {
 
     verify(tagRepository).save(any(Tag.class));
   }
-
 }

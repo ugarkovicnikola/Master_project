@@ -15,7 +15,9 @@ public class ApplicationConfiguration {
 
   @Bean
   public MapperFacade mapperFacade(){
-    MapperFactory mapperFactory = new DefaultMapperFactory.Builder().mapNulls(false).build();
+    MapperFactory mapperFactory = new DefaultMapperFactory.Builder()
+        .mapNulls(false)
+        .build();
 
     return mapperFactory.getMapperFacade();
   }
