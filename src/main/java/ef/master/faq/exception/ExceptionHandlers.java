@@ -39,4 +39,11 @@ public class ExceptionHandlers {
 
     return exception.getMessage();
   }
+
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(value = {IllegalArgumentException.class})
+  public String handleIllegalArgumentException(IllegalArgumentException exception) {
+
+    return exception.getMessage();
+  }
 }
