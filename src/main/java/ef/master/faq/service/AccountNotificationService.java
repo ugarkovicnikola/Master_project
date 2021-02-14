@@ -27,8 +27,8 @@ public class AccountNotificationService {
     mailMessage.setTo(student.getEmail());
     mailMessage.setFrom(sender);
     mailMessage.setSubject("New account created!");
-    mailMessage.setText("You have successfully created new student account with following info: " + "/r/n"
-        + "First name: " + student.getFirstName() + "/r/n"
+    mailMessage.setText("You have successfully created new student account with following info: " + System.lineSeparator()
+        + "First name: " + student.getFirstName() + System.lineSeparator()
         + " Last name: " + student.getLastName());
 
     javaMailSender.send(mailMessage);
@@ -40,8 +40,8 @@ public class AccountNotificationService {
     mailMessage.setTo(professor.getEmail());
     mailMessage.setFrom(sender);
     mailMessage.setSubject("New account created!");
-    mailMessage.setText("You have successfully created new student account with following info: " + "/r/n"
-        + "First name: " + professor.getFirstName() + "/r/n"
+    mailMessage.setText("You have successfully created new student account with following info: " + System.lineSeparator()
+        + "First name: " + professor.getFirstName() + System.lineSeparator()
         + " Last name: " + professor.getLastName());
 
     javaMailSender.send(mailMessage);
@@ -53,7 +53,7 @@ public class AccountNotificationService {
     mailMessage.setTo(office.getEmail());
     mailMessage.setFrom(sender);
     mailMessage.setSubject("New account created!");
-    mailMessage.setText("You have successfully created new student account with following info: " + "/r/n"
+    mailMessage.setText("You have successfully created new student account with following info: " + System.lineSeparator()
         + "Name: " + office.getName());
 
     javaMailSender.send(mailMessage);
