@@ -1,7 +1,7 @@
 package ef.master.faq.service;
 
 import ef.master.faq.dto.VoteRequest;
-import ef.master.faq.enums.VoteEnum;
+import ef.master.faq.enums.Vote;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -20,9 +20,9 @@ public class VoteService {
   public void vote(@NotNull @Valid VoteRequest voteRequest) {
     Long postId = voteRequest.getPostId();
     Long commentId = voteRequest.getCommentId();
-    VoteEnum voteEnum = voteRequest.getVote();
+    Vote vote = voteRequest.getVote();
 
-   if (VoteEnum.UPVOTE.equals(voteEnum)) {
+   if (Vote.UPVOTE.equals(vote)) {
       if (postId > 0) {
         postService.upVote(postId);
       } else {

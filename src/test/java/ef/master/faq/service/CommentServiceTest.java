@@ -87,6 +87,7 @@ public class CommentServiceTest {
   public void createComment_NonExistingStudentId_ShouldThrowAnException() {
     CommentRequest request = new CommentRequest();
     request.setText("comment 1");
+    request.setStudentId(5L);
 
     when(studentRepository.findById(anyLong())).thenReturn(Optional.empty());
 
@@ -97,6 +98,7 @@ public class CommentServiceTest {
   public void createComment_NonExistingProfessorId_ShouldThrowAnException() {
     CommentRequest request = new CommentRequest();
     request.setText("comment 1");
+    request.setProfessorId(5L);
 
     when(professorRepository.findById(anyLong())).thenReturn(Optional.empty());
 
@@ -107,6 +109,7 @@ public class CommentServiceTest {
   public void createComment_NonExistingOfficeId_ShouldThrowAnException() {
     CommentRequest request = new CommentRequest();
     request.setText("comment 1");
+    request.setOfficeId(5L);
 
     when(officeRepository.findById(anyLong())).thenReturn(Optional.empty());
 

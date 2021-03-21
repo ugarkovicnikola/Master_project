@@ -1,6 +1,6 @@
 package ef.master.faq.enums;
 
-public enum VoteEnum {
+public enum Vote {
   UPVOTE,
   DOWNVOTE
 }

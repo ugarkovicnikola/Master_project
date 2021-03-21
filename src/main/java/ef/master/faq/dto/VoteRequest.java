@@ -1,6 +1,6 @@
 package ef.master.faq.dto;
 
-import ef.master.faq.enums.VoteEnum;
+import ef.master.faq.enums.Vote;
 import lombok.Data;
 
 import javax.validation.constraints.AssertTrue;
@@ -10,7 +10,7 @@ public class VoteRequest {
   private Long postId;
   private Long commentId;
 
-  private VoteEnum vote;
+  private Vote vote;
 
   @AssertTrue(message = "You need to vote either for post or comment")
   private boolean assertVoteToPostOrComment() {
